@@ -1,0 +1,28 @@
+<h1>Send Offers Login</h1><br />
+<div style="color: red;"><%= flash[:notice] %></div>
+<div>
+  <%= form_tag('/login', :method=>'post') do %>
+    <fieldset>
+      <legend>Please Log In</legend>
+
+      <div>
+        <label for="name">Email:</label>
+        <%= text_field_tag :username, params[:username] %>
+      </div>
+
+      <div>
+        <label for="password">Password:</label>
+        <%= password_field_tag :password, params[:password] %>
+      </div>
+	  
+	  <div>
+		<%= link_to 'New Registration', :controller=>'admin', :action=>'register' %> | <%= link_to 'Forgot Password', :controller=>'admin', :action=>'reset_pass' %>
+      </div>
+
+      <div>
+      	<br />
+        <%= submit_tag "Login" %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

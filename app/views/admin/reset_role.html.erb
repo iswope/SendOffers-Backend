@@ -1,0 +1,18 @@
+<div>
+	<h2>New features require you to declare your role while using our sevices. </h2><br /><br />
+  <% form_for(:reset_role, :url => {:action => :role_reset, :id => @uid}) do |form| %>
+    <fieldset>
+      <legend>Please select your 'Role'</legend>
+		
+      <p>
+        <label for="role" >Role:</label>
+		<%= form.select(:role, options_for_select([ "Supplier", "Distributor", "Buyer" ], "Supplier")) %>
+      </p>
+
+      <div>
+      	<br />
+        <%= form.submit "Submit Role" %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

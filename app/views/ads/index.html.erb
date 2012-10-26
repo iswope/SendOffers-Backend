@@ -1,0 +1,43 @@
+<h1>Listing ads</h1>
+
+<table>
+  <tr>
+    <th>Client</th>
+    <th>Blast</th>
+    <th>Blast Date</th>
+    <th>Desc</th>
+    <th>Supp art</th>
+    <th>Dist art</th>
+    <th>Active</th>
+    <th>Start</th>
+    <th>End</th>
+    <th>Subject line</th>
+    <th>Imagemap</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ads.each do |ad| %>
+  <tr>
+    <td><%= ad.client_id %></td>
+    <td><%= ad.blast_id %></td>
+    <td><%= ad.blast_date %></td>
+    <td><%= ad.description %></td>
+    <td><%= ad.supp_art %></td>
+    <td><%= ad.dist_art %></td>
+    <td><%= ad.active %></td>
+    <td><%= ad.start %></td>
+    <td><%= ad.end %></td>
+    <td><%= ad.subject_line %></td>
+    <td><%= ad.imagemap %></td>
+    <td><%= link_to 'Show', ad %></td>
+    <td><%= link_to 'Edit', edit_ad_path(ad) %></td>
+    <td><%= link_to 'Destroy', ad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ad', new_ad_path %>

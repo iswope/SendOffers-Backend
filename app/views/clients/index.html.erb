@@ -1,0 +1,71 @@
+<h1>Listing clients</h1>
+
+<table border="1">
+  <tr>
+    <th>Company</th>
+    <th>Email</th>
+    <th>Firstname</th>
+    <th>Lastname</th>
+    <th>Phone</th>
+    <th>Fax</th>
+    <th>Mailing<br />address</th>
+    <th>Mailing<br />address2</th>
+    <th>Mailing<br />city</th>
+    <th>Mailing<br />state</th>
+    <th>Mailing<br />zip</th>
+    <th>Mailing<br />country</th>
+    <th>Shipping address</th>
+    <th>Shipping<br />address2</th>
+    <th>Shipping<br />city</th>
+    <th>Shipping<br />state</th>
+    <th>Shipping<br />zip</th>
+    <th>Shipping<br />country</th>
+    <th>Web</th>
+    <th>Lead<br />Name</th>
+    <th>Lead<br />Email</th>
+    <th>Admin<br />notes</th>
+    <th>Status</th>
+    <th>Created</th>
+    <th>Updated</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @clients.each do |client| %>
+  <tr>
+    <td><%= client.company %></td>
+    <td><%= client.email %></td>
+    <td><%= client.firstname %></td>
+    <td><%= client.lastname %></td>
+    <td><%= client.phone %></td>
+    <td><%= client.fax %></td>
+    <td><%= client.mailing_address %></td>
+    <td><%= client.mailing_address2 %></td>
+    <td><%= client.mailing_city %></td>
+    <td><%= client.mailing_state %></td>
+    <td><%= client.mailing_zip %></td>
+    <td><%= client.mailing_country %></td>
+    <td><%= client.shipping_address %></td>
+    <td><%= client.shipping_address2 %></td>
+    <td><%= client.shipping_city %></td>
+    <td><%= client.shipping_state %></td>
+    <td><%= client.shipping_zip %></td>
+    <td><%= client.shipping_country %></td>
+    <td><%= client.web %></td>
+    <td><%= client.leadname %></td>
+    <td><%= client.leademail %></td>
+    <td><%= client.admin_notes %></td>
+    <td><%= client.status %></td>
+    <td><%= client.created_at %></td>
+    <td><%= client.updated_at %></td>
+    <td><%= link_to 'Show', client %></td>
+    <td><%= link_to 'Edit', edit_client_path(client) %></td>
+    <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Client', new_client_path %>

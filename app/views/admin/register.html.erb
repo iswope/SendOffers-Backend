@@ -1,0 +1,49 @@
+<script>
+//	$(function($) {
+//	    $("#role").change(function() {
+//	        $.ajax({url: '<%= url_for :action=>'role_options' %>',
+//	        data: 'opts=' + this.value,
+//	        
+//	        dataType: 'html',
+//	        success: function(data) {
+//	      		Query("#role_options").html(data);
+//	    	}})
+//	    });
+//	});
+/*
+jQuery(function($) {
+// when the #region_id field changes
+  $("#role").change(function() {
+    jQuery.post('/role_options?opts=' + this.value, 
+    success : function(data){
+        $("#role_options").html(data);
+    })
+    return false;
+  });
+})
+*/
+$(document).ready(function() {
+  $("#role").bind("change",function() {
+		 $.ajax({
+		    url : "/role_options?opts=" + this.value, 
+		    type: "POST",
+		    success : function(data) {
+		      $("#role_options").html(data)
+		    }
+		 }) 
+	})
+})
+</script>
+
+Registration is free!
+<fieldset>
+	<legend><h2>Select Role</h2></legend>
+	  <p>
+        <label for="role" >Role:</label>
+			<%= select_tag :role, options_for_select(["Select","Supplier", "Distributor"]) %>
+      </p>
+</fieldset>
+<br />
+<div id="role_options">
+</div>
+

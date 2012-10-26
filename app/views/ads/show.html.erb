@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Client:</b>
+  <%= @ad.client_id %>
+</p>
+
+<p>
+  <b>Blast:</b>
+  <%= @ad.blast_id %>
+</p>
+
+<p>
+  <b>Subject:</b>
+  <%= @ad.subject %>
+</p>
+
+<p>
+  <b>Supp art:</b>
+  <%= @ad.supp_art %>
+</p>
+
+<p>
+  <b>Dist art:</b>
+  <%= @ad.dist_art %>
+</p>
+
+<p>
+  <b>Active:</b>
+  <%= @ad.active %>
+</p>
+
+<p>
+  <b>Start:</b>
+  <%= @ad.start %>
+</p>
+
+<p>
+  <b>End:</b>
+  <%= @ad.end %>
+</p>
+
+<p>
+  <b>Subject line:</b>
+  <%= @ad.subject_line %>
+</p>
+
+<p>
+  <b>Imagemap:</b>
+  <%= @ad.imagemap %>
+</p>
+
+
+<%= link_to 'Edit', edit_ad_path(@ad) %> |
+<%= link_to 'Back', ads_path %>

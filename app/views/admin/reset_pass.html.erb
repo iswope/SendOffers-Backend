@@ -1,0 +1,21 @@
+<div>
+  <% form_for(:reset_pass, :url => {:action => :email_reset_request}) do |form| %>
+    <fieldset>
+      <legend>Please enter your Registered Email Address</legend>
+
+      <div>
+        <label for="name">Email:</label>
+        <%= form.text_field :name, :size => 40 %>
+      </div>
+	  
+	  <div>
+		<%= link_to 'New Registration', :controller => 'admin', :action => 'register' %>
+      </div>
+
+      <div>
+      	<br />
+        <%= form.submit "Reset Password" %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>

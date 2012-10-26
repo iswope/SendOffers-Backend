@@ -1,0 +1,57 @@
+<%= form_for(@ad) do |f| %>
+  <% if @ad.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ad.errors.count, "error") %> prohibited this ad from being saved:</h2>
+
+      <ul>
+      <% @ad.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :client_id %><br />
+    <%= f.number_field :client_id %>
+  </div>
+  <div class="field">
+    <%= f.label :blast_id %><br />
+    <%= f.number_field :blast_id %>
+  </div>
+  <div class="field">
+    <%= f.label :subject %><br />
+    <%= f.text_field :subject %>
+  </div>
+  <div class="field">
+    <%= f.label :supp_art %><br />
+    <%= f.text_field :supp_art %>
+  </div>
+  <div class="field">
+    <%= f.label :dist_art %><br />
+    <%= f.text_field :dist_art %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br />
+    <%= f.number_field :active %>
+  </div>
+  <div class="field">
+    <%= f.label :start %><br />
+    <%= f.date_select :start %>
+  </div>
+  <div class="field">
+    <%= f.label :end %><br />
+    <%= f.date_select :end %>
+  </div>
+  <div class="field">
+    <%= f.label :subject_line %><br />
+    <%= f.text_field :subject_line %>
+  </div>
+  <div class="field">
+    <%= f.label :imagemap %><br />
+    <%= f.text_field :imagemap %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
