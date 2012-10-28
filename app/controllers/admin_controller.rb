@@ -90,6 +90,7 @@ class AdminController < ApplicationController
     session[:company] = @client.company
     session[:status] = @client.status
     session[:role] = @client.role
+    session[:uuid] = @client.uuid
     
     redirect_to 'http://backend.sendoffers.com/thankyou.html'
   end
