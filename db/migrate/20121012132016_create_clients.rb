@@ -2,6 +2,7 @@ class CreateClients < ActiveRecord::Migration
   def change
     create_table :clients do |t|
       t.integer :user_id
+      t.string :role
       t.string :email
       t.string :company
       t.string :firstname
@@ -25,6 +26,7 @@ class CreateClients < ActiveRecord::Migration
       t.string :leadname
       t.string :leademail
       t.string :status
+      t.string :uuid
       t.datetime :created_at
       t.datetime :updated_at
 

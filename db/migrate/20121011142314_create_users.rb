@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :salt
       t.string :role
       t.string :sopass
+      t.string :status
       t.datetime :created_at
       t.datetime :updated_at
 

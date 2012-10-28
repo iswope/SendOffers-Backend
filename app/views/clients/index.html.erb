@@ -2,7 +2,9 @@
 
 <table border="1">
   <tr>
+  	<th>ClientID</th>
     <th>Company</th>
+    <th>Type</th>
     <th>Email</th>
     <th>Firstname</th>
     <th>Lastname</th>
@@ -34,7 +36,9 @@
 
 <% @clients.each do |client| %>
   <tr>
+  	<td><%= client.id %></td>
     <td><%= client.company %></td>
+    <td><%= client.role %></td>
     <td><%= client.email %></td>
     <td><%= client.firstname %></td>
     <td><%= client.lastname %></td>

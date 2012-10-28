@@ -16,22 +16,25 @@ ActiveRecord::Schema.define(:version => 20121015110212) do
   create_table "ads", :force => true do |t|
     t.integer  "client_id"
     t.integer  "blast_id"
-    t.date     "blast_date"
+    t.string   "subject"
     t.string   "description"
     t.string   "supp_art"
     t.string   "dist_art"
-    t.integer  "active"
     t.date     "start"
     t.date     "end"
+    t.date     "blast_date"
     t.string   "status"
-    t.string   "subject_line"
+    t.string   "active"
     t.string   "imagemap"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.string   "admin_notes"
+    t.string   "uuid"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "clients", :force => true do |t|
     t.integer  "user_id"
+    t.string   "role"
     t.string   "email"
     t.string   "company"
     t.string   "firstname"
@@ -55,6 +58,7 @@ ActiveRecord::Schema.define(:version => 20121015110212) do
     t.string   "leadname"
     t.string   "leademail"
     t.string   "status"
+    t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -65,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20121015110212) do
     t.string   "salt"
     t.string   "role"
     t.string   "sopass"
+    t.string   "status"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end

@@ -4,7 +4,6 @@ class AdminController < ApplicationController
     if request.post?
       flash[:notice] = ''
       user = User.authenticate(params[:username], params[:password])
-      flash[:notice] = "hey"
       if user
         role = user.role
         @client = Client.find(:first, :conditions => ['user_id = ?', user.id])
@@ -63,8 +62,10 @@ class AdminController < ApplicationController
     @user.role = params[:role]
     @role = params[:role]
     
+    @client.uuid = UUIDTools::UUID.timestamp_create.to_s
+    @client.role = params[:role]
     @client.status = "Pending"
-
+    
     #unless params[:mailing_options].nil?
       #@client.mailing_options = params[:mailing_options]['opts']
     #else
@@ -88,6 +89,8 @@ class AdminController < ApplicationController
     session[:lastname] = @client.lastname
     session[:company] = @client.company
     session[:status] = @client.status
+    session[:role] = @client.role
+    
     redirect_to 'http://backend.sendoffers.com/thankyou.html'
   end
   
