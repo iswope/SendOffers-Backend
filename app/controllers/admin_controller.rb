@@ -10,6 +10,7 @@ class AdminController < ApplicationController
         session[:user_id] = user.id
         session[:role] = user.role
         session[:client_id] = @client.id
+        session[:client_uuid] = @client.uuid
         session[:email] = @client.email
         session[:firstname] = @client.firstname
         session[:lastname] = @client.lastname
@@ -25,7 +26,7 @@ class AdminController < ApplicationController
             when 'Admin'
                 redirect_to '/dash'
             else
-              sendto(role,@client.id)
+              sendto(role,@client.uuid)
           end
         end
       else
@@ -40,6 +41,7 @@ class AdminController < ApplicationController
     session[:role] = nil
     session[:referer] = nil
     session[:client_id] = nil
+    session[:client_uuid] = nil
     session[:email] = nil
     flash[:notice] = "Logged out"
     redirect_to(:action => "login")
@@ -84,13 +86,13 @@ class AdminController < ApplicationController
     session[:referer] = ''
     session[:user_id] = @user.id
     session[:client_id] = @client.id
+    session[:client_uuid] = @client.uuid
     session[:email] = @client.email
     session[:firstname] = @client.firstname
     session[:lastname] = @client.lastname
     session[:company] = @client.company
     session[:status] = @client.status
     session[:role] = @client.role
-    session[:uuid] = @client.uuid
     
     redirect_to 'http://backend.sendoffers.com/thankyou.html'
   end
@@ -137,7 +139,7 @@ class AdminController < ApplicationController
     end
   end
   
-  def sendto(role,client_id)
+  def sendto(role,client_uuid)
     case role
         when 'Distributor'
           unless Client.find_by_id(client_id).status == 'Active'
@@ -148,7 +150,7 @@ class AdminController < ApplicationController
         when 'Supplier'
           #@has_ad = Ad.find(:first, :conditions => ['client_id = ?', client_id])
           #unless @has_ad.nil?
-            redirect_to :controller => :ads, :action => :supplier_dash, :id => client_id
+            redirect_to :controller => :ads, :action => :supplier_dash, :id => client_uuid
           #else
             #@has_prod = Product.find(:first, :conditions => ['client_id = ?', client_id])
             #unless @has_prod.nil?

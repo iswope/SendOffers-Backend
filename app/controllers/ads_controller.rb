@@ -3,8 +3,8 @@ class AdsController < ApplicationController
   
   
   def supplier_dash
-    @ads = Ad.find(:all, :conditions => ['client_id = ?', params[:client_id]])
-    @client_id = params[:client_id]
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    @ads = Ad.find(:all, :conditions => ['client_id = ?', @client.id])
     respond_to do |format|
       format.html # supplier.html.erb
       format.json { render json: @ads }
@@ -12,8 +12,8 @@ class AdsController < ApplicationController
   end
   
   def supplier_ad
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
     @ad = Ad.new
-    @client_id = params[:client_id]
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @ad }
@@ -21,17 +21,21 @@ class AdsController < ApplicationController
   end
   
   def supplier_create
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
     @ad = Ad.new(params[:ad])
-
+    @ad.uuid = UUIDTools::UUID.timestamp_create.to_s
+    @ad.save!
+    unless params[:supp_art].nil
+      uploader1 = ArtUploader.new
+      uploader1.store!(params[:supp_art])
+    end
+    unless params[:dist_art].nil
+      uploader2 = ArtUploader.new
+      uploader2.store!(params[:dist_art])
+    end
     respond_to do |format|
-      @client_id = params[:client_id]
-      if @ad.save
-        format.html { redirect_to :action => :supplier_dash, :id => @client_id, notice: 'Ad was successfully created.' }
-        format.json { render json: @ad, status: :created, location: @ad }
-      else
-        format.html { redirect_to :action => :supplier_new, :id => @client_id, notice: 'There was an Error - Ad not created.'}
-        format.json { render json: @ad.errors, status: :unprocessable_entity }
-      end
+      format.html { redirect_to :action => :supplier_dash, :id => @client.uuid, notice: 'Ad was successfully created.' }
+      format.json { render json: @ad, status: :created, location: @ad }
     end
   end
   
