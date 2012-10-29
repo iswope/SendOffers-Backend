@@ -1,0 +1,64 @@
+<%= form_for :ad, :url => { :controller => :ads, :action => :supplier_create, :id => @client.uuid }, :multipart => true do |f| %>
+<fieldset>
+	<legend><h2>Scheduling Details</h2></legend>
+	<p>
+		<label for="BlastDate" >Email Blast Date</label>
+		<%= f.date_select :blast_date %>
+	</p>
+	<p>
+		<label for="hours" >Prefered Blast Time</label>
+		<%= select_tag :blast_hours, options_for_select(["Immediate","Before Noon","After Noon","After Hours"]) %>
+	</p>
+	<p>
+		<label for="status" >Confirmation:</label>
+		<%= select_tag :status, options_for_select(["Sample Proof Required","Pre-Approved"]) %>
+	</p>
+</fieldset>
+<fieldset>
+    <legend><h2>Ad Details</h2></legend>
+	<table>
+		<tr>
+			<td>
+				<%= f.label :subject, 'Ad Tag Line' %><br />
+				<%= f.text_field :subject, :size => 65 %>
+			</td>
+		</tr>
+		<tr>
+		  	<td><%= f.label :description, 'Ad Copy (limit 255 char)' %><br />
+		    <%= f.text_area :description, :rows => 6, :cols => 50, :limit => 1000 %>
+		    </td>
+		</tr>
+		<tr>
+			<td>
+				<%= f.label :company,'Company Name used in Ad' %><br />
+				<%= f.text_field :company, :value => @client.company, :size => 65 %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= f.label :email,'Email Displayed in Ad' %><br />
+				<%= f.text_field :email, :value => @client.email, :size => 65 %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= f.label :web, 'Web Site used in Ad' %><br />
+			    <%= f.text_field :web, :value => @client.web, :size => 65 %>
+			</td>
+		</tr>
+	</table>
+</fieldset>
+<fieldset>
+    <legend><h2>Graphic Details</h2></legend>
+	<div id="suppart">
+		  Supplier Art <%= file_field_tag :supp_art %>
+	</div>
+	<div id="distart">
+		  Distributor Art <%= file_field_tag :dist_art %>
+	</div>
+</fieldset>
+  <br />
+  <p>
+    <%= f.submit 'Submit' %>
+  </p>
+<% end %>

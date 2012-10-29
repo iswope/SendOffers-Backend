@@ -1,0 +1,12 @@
+<p>
+	<h3>Supplier Art</h3>
+</p>
+<p>
+<% form_for(:upload, :url => {:action=>:create}, :html => { :multipart => true }) do |form| %>
+	<%= form.hidden_field :art_type, :value => 's' %>
+  <p>
+    <label for="uploaded_data">Upload a file:</label>
+    <%= form.file_field :uploaded_data %> <%= submit_tag "Upload" %>
+  </p>
+<% end %>
+</p>
