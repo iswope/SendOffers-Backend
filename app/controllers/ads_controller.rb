@@ -1,7 +1,6 @@
 class AdsController < ApplicationController
   
   
-  
   def supplier_dash
     @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
     @ads = Ad.find(:all, :conditions => ['client_id = ?', @client.id])
@@ -25,11 +24,11 @@ class AdsController < ApplicationController
     @ad = Ad.new(params[:ad])
     @ad.uuid = UUIDTools::UUID.timestamp_create.to_s
     @ad.save!
-    unless params[:supp_art].nil
+    unless !params[:supp_art]?
       uploader1 = ArtUploader.new
       uploader1.store!(params[:supp_art])
     end
-    unless params[:dist_art].nil
+    unless !params[:dist_art]?
       uploader2 = ArtUploader.new
       uploader2.store!(params[:dist_art])
     end
