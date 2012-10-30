@@ -11,6 +11,8 @@ gem 'newrelic_rpm'
 
 gem 'uuidtools', '2.1.3'
 
+gem "rmagick"
+
 gem 'carrierwave'
 
 # Gems used only for assets and not required

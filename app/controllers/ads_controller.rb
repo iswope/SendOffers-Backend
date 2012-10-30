@@ -24,14 +24,18 @@ class AdsController < ApplicationController
     @ad = Ad.new(params[:ad])
     @ad.uuid = UUIDTools::UUID.timestamp_create.to_s
     @ad.save!
+=begin
     unless !params[:supp_art]?
       uploader1 = ArtUploader.new
-      uploader1.store!(params[:supp_art])
+      uploader1.file = params[:supp_art]
+      uploader1.store!
     end
     unless !params[:dist_art]?
       uploader2 = ArtUploader.new
-      uploader2.store!(params[:dist_art])
+      uploader2.file = params[:dist_art]
+      uploader2.store!
     end
+=end   
     respond_to do |format|
       format.html { redirect_to :action => :supplier_dash, :id => @client.uuid, notice: 'Ad was successfully created.' }
       format.json { render json: @ad, status: :created, location: @ad }

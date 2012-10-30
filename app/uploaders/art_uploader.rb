@@ -18,7 +18,7 @@ class ArtUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     #"uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-    "art"
+    "assets/art"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -53,7 +53,7 @@ class ArtUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
   def filename
-    @name ||= "#{timestamp}-#{super}.jpg" if original_filename.present? and super.present?
+    @name ||= "#{model.id}_#{timestamp}-#{super}.jpg" if original_filename.present? and super.present?
   end
 
   def timestamp
