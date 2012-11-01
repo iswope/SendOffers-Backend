@@ -1,5 +1,5 @@
 <h1>Supplier Dashboard</h1>
-
+[ <%= flash[:messsage] %> ]
 <table>
   <tr>
     <th>ID</th>
@@ -16,7 +16,7 @@
 <% @ads.each do |ad| %>
   <tr>
     <td><%= ad.id %></td>
-    <td><%= ad.subject_line %></td>
+    <td><%= ad.subject %></td>
     <td><%= ad.supp_art %></td>
     <td><%= ad.dist_art %></td>
     <td><%= ad.start %></td>

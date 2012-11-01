@@ -51,10 +51,10 @@
 <fieldset>
     <legend><h2>Graphic Details</h2></legend>
 	<div id="suppart">
-		  Supplier Art <%= file_field_tag :supp_art %>
+		  Distributor Art <%= f.file_field :dist_art %> (branded)
 	</div>
 	<div id="distart">
-		  Distributor Art <%= file_field_tag :dist_art %>
+		  End User Art <%= f.file_field :supp_art %> (unbranded)
 	</div>
 </fieldset>
   <br />

@@ -18,7 +18,7 @@ class ArtUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     #"uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-    "assets/art"
+    "art"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -30,7 +30,7 @@ class ArtUploader < CarrierWave::Uploader::Base
   # end
 
   # Process files as they are uploaded:
-   process :scale => [650, 850]
+   process :resize_to_fit => [650, 850]
   #
   # def scale(width, height)
   #   # do something
@@ -38,7 +38,7 @@ class ArtUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
    version :thumb do
-     process :scale => [150, 200]
+     process :resize_to_fit => [150, 200]
    end
 
   # Add a white list of extensions which are allowed to be uploaded.
@@ -53,7 +53,7 @@ class ArtUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
   def filename
-    @name ||= "#{model.id}_#{timestamp}-#{super}.jpg" if original_filename.present? and super.present?
+    @name ||= "#{model.id}_#{timestamp}-#{super}" if original_filename.present? and super.present?
   end
 
   def timestamp

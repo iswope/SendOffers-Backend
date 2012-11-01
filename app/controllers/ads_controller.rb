@@ -22,20 +22,34 @@ class AdsController < ApplicationController
   def supplier_create
     @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
     @ad = Ad.new(params[:ad])
+    @ad.client_id = @client.id
     @ad.uuid = UUIDTools::UUID.timestamp_create.to_s
+    @ad.status = "New"
+    
     @ad.save!
-=begin
-    unless !params[:supp_art]?
-      uploader1 = ArtUploader.new
-      uploader1.file = params[:supp_art]
-      uploader1.store!
-    end
-    unless !params[:dist_art]?
+
+    
+    if params[:dist_art]
       uploader2 = ArtUploader.new
-      uploader2.file = params[:dist_art]
-      uploader2.store!
+      uploader2.store!(params[:dist_art])
+      
+      fdir = "/sendoffers.com/httpdocs/backend/public" + @ad.dist_art
+      flash[:messsage] = "-" + fdir + "-"
+      f = File.new(fdir,  "w")
+      fn = File.basename(f)
+      dir = "/sendoffers.com/httpdocs/backend/public/art/"
+      new_fn = @ad.id.to_s + "_" + fn
+      File.rename(fdir, dir + new_fn)
+      @ad.supp_art = new_fn
+      @ad.save!
     end
-=end   
+    if params[:supp_art]
+      uploader1 = ArtUploader.new
+      uploader1.store!(params[:supp_art])
+      
+      
+    end
+
     respond_to do |format|
       format.html { redirect_to :action => :supplier_dash, :id => @client.uuid, notice: 'Ad was successfully created.' }
       format.json { render json: @ad, status: :created, location: @ad }
