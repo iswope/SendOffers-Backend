@@ -1,11 +1,11 @@
 <h1>Supplier Dashboard</h1>
-[ <%= flash[:messsage] %> ]
+<%= flash[:notice] %>
 <table>
   <tr>
     <th>ID</th>
     <th>Subject</th>
-    <th>Supp art</th>
-    <th>Dist art</th>
+    <th>Dist Art</th>
+    <th>EndUserArt</th>
     <th>Start</th>
     <th>Status</th>
     <th></th>
@@ -17,8 +17,8 @@
   <tr>
     <td><%= ad.id %></td>
     <td><%= ad.subject %></td>
-    <td><%= ad.supp_art %></td>
     <td><%= ad.dist_art %></td>
+    <td><%= ad.supp_art %></td>    
     <td><%= ad.start %></td>
     <td><%= ad.status %></td>
     <td><%= link_to 'Show', ad %></td>

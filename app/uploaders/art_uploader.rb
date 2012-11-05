@@ -53,7 +53,16 @@ class ArtUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
   def filename
-    @name ||= "#{model.id}_#{timestamp}-#{super}" if original_filename.present? and super.present?
+    @name ||= "#{model.id}-#{timestamp}-#{super}" if original_filename.present? and super.present?
+
+=begin    
+    if @dist_art
+      @name ||= "#{model.id}-d-#{timestamp}-#{super}" if original_filename.present? and super.present?
+    end
+    if @supp_art
+      @name ||= "#{model.id}-e-#{timestamp}-#{super}" if original_filename.present? and super.present?
+    end
+=end    
   end
 
   def timestamp

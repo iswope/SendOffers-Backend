@@ -27,31 +27,44 @@ class AdsController < ApplicationController
     @ad.status = "New"
     
     @ad.save!
-
-    
+    adid = @ad.id.to_s
+    #art = @ad.dist_art.to_s
+=begin    
     if params[:dist_art]
       uploader2 = ArtUploader.new
       uploader2.store!(params[:dist_art])
-      
-      fdir = "/sendoffers.com/httpdocs/backend/public" + @ad.dist_art
-      flash[:messsage] = "-" + fdir + "-"
-      f = File.new(fdir,  "w")
-      fn = File.basename(f)
-      dir = "/sendoffers.com/httpdocs/backend/public/art/"
-      new_fn = @ad.id.to_s + "_" + fn
-      File.rename(fdir, dir + new_fn)
-      @ad.supp_art = new_fn
-      @ad.save!
     end
     if params[:supp_art]
       uploader1 = ArtUploader.new
       uploader1.store!(params[:supp_art])
-      
-      
     end
 
+    fdir = "#{Rails.root}/public" + art
+    f = File.new(fdir,  "w")
+    fn = File.basename(f)
+    dir = "#{Rails.root}/public/art/"
+    new_fn = adid + fn
+    new_fdir = dir + new_fn
+    
+    File.rename(fdir, new_fdir)
+    
+    #renameArt = Ad.find(:first, :conditions => ['id = ?', adid.to_i])
+    
+    if params[:ad][:dist_art]
+      renameArt = Ad.find(adid.to_i)
+      renameArt[:dist_art] = new_fn
+      renameArt.save!
+    end
+    if params[:ad][:supp_art]
+      renameArt = Ad.find(adid.to_i)
+      renameArt[:supp_art] = new_fn
+      renameArt.save!
+    end
+=end
+flash[:notice] = adid.to_s
     respond_to do |format|
-      format.html { redirect_to :action => :supplier_dash, :id => @client.uuid, notice: 'Ad was successfully created.' }
+
+      format.html { redirect_to :action => :supplier_dash, :id => @client.uuid }
       format.json { render json: @ad, status: :created, location: @ad }
     end
   end
