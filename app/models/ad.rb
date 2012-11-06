@@ -6,4 +6,6 @@ class Ad < ActiveRecord::Base
   mount_uploader  :dist_art, ArtUploader
   mount_uploader :supp_art, ArtUploader
   
+  
+  
 end

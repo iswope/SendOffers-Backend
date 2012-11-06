@@ -54,15 +54,24 @@ class AdsController < ApplicationController
 =end
     
     renameArt = Ad.find(adid.to_i)
-    
+  
     if params[:ad][:dist_art]
       fdir = "#{Rails.root}/public/art/" + renameArt[:dist_art]
       f = File.new(fdir,  "w")
       fn = File.basename(f)
       dir = "#{Rails.root}/public/art/"
-      new_fn = adid + "-d-" + renameArt[:dist_art]
+      new_fn = adid + "-d" + renameArt[:dist_art]
       new_fdir = dir + new_fn
       File.rename(fdir, new_fdir)
+
+      tfdir = "#{Rails.root}/public/art/" + "thumb_" + adid + "-" + renameArt[:dist_art]
+      tf = File.new(tfdir,  "w")
+      tfn = File.basename(tf)
+      dir = "#{Rails.root}/public/art/"
+      pos = renameArt[:dist_art].index("-")
+      tnew_fn = renameArt[:dist_art].insert(pos, '-d')
+      tnew_fdir = dir + tnew_fn
+      File.rename(tfdir, tnew_fdir)
       
       renameArt[:dist_art] = new_fn
       renameArt.save!
@@ -72,9 +81,18 @@ class AdsController < ApplicationController
       f = File.new(fdir,  "w")
       fn = File.basename(f)
       dir = "#{Rails.root}/public/art/"
-      new_fn = adid + "-e-" + renameArt[:supp_art]
+      new_fn = adid + "-e" + renameArt[:supp_art]
       new_fdir = dir + new_fn
       File.rename(fdir, new_fdir)
+      
+      tfdir = "#{Rails.root}/public/art/thumb_" + adid + "-" + renameArt[:supp_art]
+      tf = File.new(tfdir,  "w")
+      tfn = File.basename(tf)
+      dir = "#{Rails.root}/public/art/"
+      pos = renameArt[:supp_art].index("-")
+      tnew_fn = renameArt[:supp_art].insert(pos, '-e')
+      tnew_fdir = dir + tnew_fn
+      File.rename(tfdir, tnew_fdir)
       
       renameArt[:supp_art] = new_fn
       renameArt.save!
