@@ -18,10 +18,8 @@
   <tr>
     <td><%= ad.id %></td>
     <td><%= ad.subject %></td>
-    <td><%=# image_tag ad.dist_art.to_s.insert(5, 'thumb_') 
-    %></td>
-    <td><%=# image_tag ad.supp_art.to_s.insert(5, 'thumb_') 
-    %></td>    
+    <td><%= image_tag ad.dist_art.to_s.insert(5, 'thumb_') %></td>
+    <td><%= image_tag ad.supp_art.to_s.insert(5, 'thumb_') %></td>    
     <td><%= ad.start %></td>
     <td><%= ad.status %></td>
     <td><%= ad.created_at %></td>
