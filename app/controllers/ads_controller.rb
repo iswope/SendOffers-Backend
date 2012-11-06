@@ -64,36 +64,42 @@ class AdsController < ApplicationController
       new_fdir = dir + new_fn
       File.rename(fdir, new_fdir)
 
-      tfdir = "#{Rails.root}/public/art/" + "thumb_" + adid + "-" + renameArt[:dist_art]
-      tf = File.new(tfdir,  "w")
+      tfdir = "#{Rails.root}/public/art/" + "thumb_" + adid + renameArt[:dist_art]
+      otfdir = "#{Rails.root}/public/art/" + "thumb_" + adid + renameArt[:dist_art]
+      tf = File.open(tfdir,  "w")
       tfn = File.basename(tf)
       dir = "#{Rails.root}/public/art/"
-      pos = renameArt[:dist_art].index("-")
-      tnew_fn = renameArt[:dist_art].insert(pos, '-d')
+      pos = tfn.index("-")
+      tnew_fn = tfn.insert(pos + 1, 'd-')
+      tnew_fn = tnew_fn.gsub(/[--]/, '-') 
       tnew_fdir = dir + tnew_fn
       File.rename(tfdir, tnew_fdir)
-      
+      #ntfn = tfn.gsub(/[--]/, '-') 
+      #File.delete(otfdir)
+     
       renameArt[:dist_art] = new_fn
       renameArt.save!
     end
     if params[:ad][:supp_art]
       fdir = "#{Rails.root}/public/art/" + renameArt[:supp_art]
-      f = File.new(fdir,  "w")
+      f = File.open(fdir,  "w")
       fn = File.basename(f)
       dir = "#{Rails.root}/public/art/"
       new_fn = adid + "-e" + renameArt[:supp_art]
       new_fdir = dir + new_fn
       File.rename(fdir, new_fdir)
-      
+=begin     
       tfdir = "#{Rails.root}/public/art/thumb_" + adid + "-" + renameArt[:supp_art]
       tf = File.new(tfdir,  "w")
       tfn = File.basename(tf)
       dir = "#{Rails.root}/public/art/"
-      pos = renameArt[:supp_art].index("-")
-      tnew_fn = renameArt[:supp_art].insert(pos, '-e')
+      pos = tfn.index("-")
+      tnew_fn = tfn.insert(pos + 1, 'e')
+      tnew_fn = tnew_fn.gsub(/[--]/, '-') 
       tnew_fdir = dir + tnew_fn
       File.rename(tfdir, tnew_fdir)
-      
+      File.delete(tfdir)
+=end      
       renameArt[:supp_art] = new_fn
       renameArt.save!
     end
