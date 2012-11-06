@@ -28,40 +28,58 @@ class AdsController < ApplicationController
     
     @ad.save!
     adid = @ad.id.to_s
-    #art = @ad.dist_art.to_s
-=begin    
-    if params[:dist_art]
-      uploader2 = ArtUploader.new
-      uploader2.store!(params[:dist_art])
-    end
-    if params[:supp_art]
-      uploader1 = ArtUploader.new
-      uploader1.store!(params[:supp_art])
-    end
 
-    fdir = "#{Rails.root}/public" + art
-    f = File.new(fdir,  "w")
-    fn = File.basename(f)
-    dir = "#{Rails.root}/public/art/"
-    new_fn = adid + fn
-    new_fdir = dir + new_fn
+=begin    
+    if params[:ad][:dist_art]
+      #@dist_art = "dist"
+      params[:ad][:dist_art].original_filename = "-d-" + params[:ad][:dist_art].original_filename
+      dist_art = @ad.dist_art.to_s
+    end 
+    if params[:ad][:supp_art]
+      #@supp_art = "supp"
+      params[:ad][:supp_art].original_filename = "-e-" + params[:ad][:supp_art].original_filename
+      supp_art = @ad.supp_art.to_s
+    end
     
-    File.rename(fdir, new_fdir)
+
+
+    if params[:ad][:dist_art]
+      uploader2 = ArtUploader.new
+      uploader2.store!(params[:ad][:dist_art])
+    end
+    if params[:ad][:supp_art]
+      uploader1 = ArtUploader.new
+      uploader1.store!(params[:ad][:supp_art])
+    end
+=end
     
-    #renameArt = Ad.find(:first, :conditions => ['id = ?', adid.to_i])
+    renameArt = Ad.find(adid.to_i)
     
     if params[:ad][:dist_art]
-      renameArt = Ad.find(adid.to_i)
+      fdir = "#{Rails.root}/public/art/" + renameArt[:dist_art]
+      f = File.new(fdir,  "w")
+      fn = File.basename(f)
+      dir = "#{Rails.root}/public/art/"
+      new_fn = adid + "-d-" + renameArt[:dist_art]
+      new_fdir = dir + new_fn
+      File.rename(fdir, new_fdir)
+      
       renameArt[:dist_art] = new_fn
       renameArt.save!
     end
     if params[:ad][:supp_art]
-      renameArt = Ad.find(adid.to_i)
+      fdir = "#{Rails.root}/public/art/" + renameArt[:supp_art]
+      f = File.new(fdir,  "w")
+      fn = File.basename(f)
+      dir = "#{Rails.root}/public/art/"
+      new_fn = adid + "-e-" + renameArt[:supp_art]
+      new_fdir = dir + new_fn
+      File.rename(fdir, new_fdir)
+      
       renameArt[:supp_art] = new_fn
       renameArt.save!
     end
-=end
-flash[:notice] = adid.to_s
+
     respond_to do |format|
 
       format.html { redirect_to :action => :supplier_dash, :id => @client.uuid }

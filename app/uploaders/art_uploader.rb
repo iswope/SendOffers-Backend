@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class ArtUploader < CarrierWave::Uploader::Base
-
+  
   # Include RMagick or MiniMagick support:
   include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -38,7 +38,7 @@ class ArtUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
    version :thumb do
-     process :resize_to_fit => [150, 200]
+     process :resize_to_fill  => [150, 200]
    end
 
   # Add a white list of extensions which are allowed to be uploaded.
@@ -53,14 +53,14 @@ class ArtUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
   def filename
-    @name ||= "#{model.id}-#{timestamp}-#{super}" if original_filename.present? and super.present?
+    @name ||= "#{timestamp}-#{super}" if original_filename.present? and super.present?
 
 =begin    
-    if @dist_art
-      @name ||= "#{model.id}-d-#{timestamp}-#{super}" if original_filename.present? and super.present?
+    if :dist_art
+      @name ||= "-d-#{timestamp}-#{super}" if original_filename.present? and super.present?
     end
-    if @supp_art
-      @name ||= "#{model.id}-e-#{timestamp}-#{super}" if original_filename.present? and super.present?
+    if :supp_art
+      @name ||= "-e-#{timestamp}-#{super}" if original_filename.present? and super.present?
     end
 =end    
   end

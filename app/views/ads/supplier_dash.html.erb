@@ -8,6 +8,7 @@
     <th>EndUserArt</th>
     <th>Start</th>
     <th>Status</th>
+    <th>Created</th>
     <th></th>
     <th></th>
     <th></th>
@@ -17,10 +18,13 @@
   <tr>
     <td><%= ad.id %></td>
     <td><%= ad.subject %></td>
-    <td><%= ad.dist_art %></td>
-    <td><%= ad.supp_art %></td>    
+    <td><%=# image_tag ad.dist_art.to_s.insert(5, 'thumb_') 
+    %></td>
+    <td><%=# image_tag ad.supp_art.to_s.insert(5, 'thumb_') 
+    %></td>    
     <td><%= ad.start %></td>
     <td><%= ad.status %></td>
+    <td><%= ad.created_at %></td>
     <td><%= link_to 'Show', ad %></td>
     <td><%= link_to 'Edit', edit_ad_path(ad) %></td>
     <td><%= link_to 'Destroy', ad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
