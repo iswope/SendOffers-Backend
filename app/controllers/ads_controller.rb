@@ -1,5 +1,59 @@
+require 'net/http'
+require 'net/https'
+require 'rexml/document'
+
 class AdsController < ApplicationController
   
+  def get_lists_api
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    
+    http = Net::HTTP.new('services.reachmail.net',443)
+    accountIdRequest = Net::HTTP::Get.new('/Rest/Administration/v1/users/current')
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    accountIdRequest.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
+    serviceResponse = http.request(accountIdRequest)
+   
+    #doc = REXML::Document.new(serviceResponse.body)
+    #root = doc.root
+    #accountId = root.elements['AccountId'].text
+    accountId = "6a41fce9-8dbd-4464-a07b-7c87ed0001c6"
+
+    listRequest = Net::HTTP::Post.new('/Rest/Contacts/v1/lists/query/'+accountId)
+    listRequest.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
+    listRequest["Content-Type"] = "text/xml"
+    filterXML = '<ListFilter></ListFilter>'
+    serviceResponse = http.request(listRequest, filterXML)
+    
+    #puts serviceResponse.body
+    
+    
+    @response = Array.new
+    doc = REXML::Document.new(serviceResponse.body)
+    
+#=begin    
+    doc.elements.each("//fields") { |element| 
+        #element.attributes.each {|name, value| @response <<  "{" + value.gsub(/\s/, '') + " => '" + element.get_text.to_s + "'}" }
+        element.attributes.each {|name, value| @response <<  element.get_text.to_s }
+        #element.attributes.each {|name, value| hxml[ element.get_text.to_s ] }
+      }
+    
+#=end
+    
+    #@response = []
+    #for list in doc.elements.to_a("//Lists/List/Fields[@type='regular']")
+        #@response « list.elements['regular-body'].text
+    #end
+    
+    
+    #@response = doc.get_elements('//Fields')
+  
+  
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml { render xml: @response }
+    end
+  end
   
   def supplier_dash
     @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])

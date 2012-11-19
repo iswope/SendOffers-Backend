@@ -16,6 +16,7 @@ Backend::Application.routes.draw do
   match 'ads/supplier_dash/:id' => 'ads#supplier_dash'
   match 'ads/supplier_ad/:id' => 'ads#supplier_ad'
   match 'ads/supplier_create/:id' => 'ads#supplier_create'
+  match 'ads/get_lists_api/:id' => 'ads#get_lists_api'
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
