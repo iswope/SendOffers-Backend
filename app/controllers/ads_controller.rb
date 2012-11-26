@@ -9,15 +9,20 @@ class AdsController < ApplicationController
     #report = params[:report]
     #@client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
     
-    report = "mailings"
+    #report = "groups"
+    report = "contacts"
+    #report = "mailings"
     
     case report
+      when "groups"
+        service_url= '/Rest/Contacts/v1/lists/groups/'
+        filter = '<ListFilter></ListFilter>'
       when "contacts"
         service_url= '/Rest/Contacts/v1/lists/query/'
         filter = '<ListFilter></ListFilter>'
       when "mailings"
         service_url= '/Rest/Reports/v1/mailings/query/'
-        filter = "<MailingReportFilter><MaxResults>10</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-10T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-19T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+        filter = "<MailingReportFilter><MaxResults>10</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-10T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-26T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
       when "content"
         service_url= '/Rest/Content/Mailings/v1/query/'
         filter = '<MailingFilter><MaxResults>10</MaxResults></MailingFilter>'
@@ -36,19 +41,25 @@ class AdsController < ApplicationController
     req.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
     req["Content-Type"] = "text/xml"
     resp = http.request(req, filter)
-    #@response = resp.body # debug
+
     doc = REXML::Document.new(resp.body)
- 
+   
+   @raw = resp.body
    @response = Array.new
    
    case report
+      when "groups"
+        doc.elements.each("Groups/Group") { |element| 
+          @response << element.elements["CreateDate"].get_text.to_s + "," + element.elements["Id"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
+        }
       when "contacts"
         doc.elements.each("Lists/List") { |element| 
-          @response << element.elements["CreateDate"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
+          @response << element.elements["CreateDate"].get_text.to_s + ", GroupId: " + element.elements["GroupId"].get_text.to_s + ", Id: " + element.elements["Id"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
         }
       when "mailings"
         doc.elements.each("MailingReports/MailingReport") { |element| 
-          @response << element.elements["Created"].get_text.to_s + ", " + element.elements["MailingId"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s
+          @response << element.elements["Created"].get_text.to_s + ", MailingListId: " + element.elements["Lists/MailingListReport/MailingListId"].get_text.to_s + ", MailingId: " + element.elements["MailingId"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/RecipientCount/Sent"].get_text.to_s
+          #@response << element.elements["Created"].get_text.to_s + ", " + element.elements["MailingId"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/RecipientCount/Total"].get_text.to_s
         }
       when "content"
         
