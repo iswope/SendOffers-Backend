@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121015110212) do
+ActiveRecord::Schema.define(:version => 20121128212237) do
 
   create_table "ads", :force => true do |t|
     t.integer  "client_id"
@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(:version => 20121015110212) do
     t.string   "company"
     t.string   "email"
     t.string   "web"
-    t.string   "supp_art"
     t.string   "dist_art"
+    t.string   "supp_art"
     t.date     "start"
     t.date     "end"
     t.date     "blast_date"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20121015110212) do
     t.string   "uuid"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "content"
   end
 
   create_table "clients", :force => true do |t|

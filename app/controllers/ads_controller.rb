@@ -6,34 +6,66 @@ class AdsController < ApplicationController
   
     
   def get_lists_api
+    @mailing = params[:mailing]
+    @uuid = params[:id]
     #report = params[:report]
-    #@client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    #@client = Client.find(:first, :conditions => ['uuid = ?', @uuid])
     
-    #report = "groups"
-    report = "contacts"
-    #report = "mailings"
+    unless params[:mailing].nil? then
+      #@report = "Content"
+      @report = "Mailing"
+      #@report = "Content"
+    else
+      @report = "Mailings"
+      #@report = "Groups"
+      #@report = "Contacts"
+    end
     
-    case report
-      when "groups"
-        service_url= '/Rest/Contacts/v1/lists/groups/'
-        filter = '<ListFilter></ListFilter>'
-      when "contacts"
+    case @report
+      when "Groups"
+        method = "post"
+        service_url= '/Rest/Content/Mailings/v1/groups/'
+      when "Contacts"
+        method = "post"
         service_url= '/Rest/Contacts/v1/lists/query/'
         filter = '<ListFilter></ListFilter>'
-      when "mailings"
+      when "Mailings"
+        method = "post"
         service_url= '/Rest/Reports/v1/mailings/query/'
-        filter = "<MailingReportFilter><MaxResults>10</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-10T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-26T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
-      when "content"
-        service_url= '/Rest/Content/Mailings/v1/query/'
-        filter = '<MailingFilter><MaxResults>10</MaxResults></MailingFilter>'
-      when "mailing"
+        filter = "<MailingReportFilter><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-25T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-28T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+      when "Content"
+        method = "get"
+        service_url= '/Rest/Content/Mailings/v1/'
+      when "Mailing"
+        method = "get"
         service_url= '/Rest/Reports/v1/mailings/'
         filter = '<MailingReport></MailingReport>'
     end
     
     accountid = '6a41fce9-8dbd-4464-a07b-7c87ed0001c6'
     http = Net::HTTP.new('services.reachmail.net',443)
-    req = Net::HTTP::Post.new(service_url + accountid)
+#=begin    
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    
+    if method == 'get'
+      req = Net::HTTP::Get.new(service_url + accountid + "/" + @mailing)
+      req.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
+      resp = http.request(req)
+    elsif method == 'post'
+      req = Net::HTTP::Post.new(service_url + accountid)
+      req.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
+      req["Content-Type"] = "text/xml"
+      resp = http.request(req, filter)
+    end
+#=end     
+=begin
+    if report == "content"
+      req = Net::HTTP::Get.new(service_url + accountid + "/" + @mailing)
+    else
+      req = Net::HTTP::Post.new(service_url + accountid)
+    end
+    
     #filter = "<MailingReportFilter><MaxResults>10</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-01T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-19T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
     
     http.use_ssl = true
@@ -41,30 +73,36 @@ class AdsController < ApplicationController
     req.basic_auth 'SENDOFFE\admin', 'Obl1skc3p0!'
     req["Content-Type"] = "text/xml"
     resp = http.request(req, filter)
-
+=end    
+    
     doc = REXML::Document.new(resp.body)
+    
    
    @raw = resp.body
    @response = Array.new
    
-   case report
-      when "groups"
+   case @report
+      when "Groups"
         doc.elements.each("Groups/Group") { |element| 
           @response << element.elements["CreateDate"].get_text.to_s + "," + element.elements["Id"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
         }
-      when "contacts"
+      when "Contacts"
         doc.elements.each("Lists/List") { |element| 
           @response << element.elements["CreateDate"].get_text.to_s + ", GroupId: " + element.elements["GroupId"].get_text.to_s + ", Id: " + element.elements["Id"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
         }
-      when "mailings"
-        doc.elements.each("MailingReports/MailingReport") { |element| 
-          @response << element.elements["Created"].get_text.to_s + ", MailingListId: " + element.elements["Lists/MailingListReport/MailingListId"].get_text.to_s + ", MailingId: " + element.elements["MailingId"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/RecipientCount/Sent"].get_text.to_s
+      when "Mailings"
+        doc.elements.each("MailingReports/MailingReport") { |element|           
+          @response << element.elements["Created"].get_text.to_s + ", MailingListId: " + element.elements["Lists/MailingListReport/MailingListId"].get_text.to_s + ", MailingId: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :mailing => element.elements["MailingId"].get_text.to_s) + "'>" + element.elements["MailingId"].get_text.to_s + "</a>, " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/RecipientCount/Sent"].get_text.to_s + "<hr />"
           #@response << element.elements["Created"].get_text.to_s + ", " + element.elements["MailingId"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/RecipientCount/Total"].get_text.to_s
         }
-      when "content"
-        
-      when "mailing"
-        
+      when "Content"
+        #doc.elements.each("Mailings/Mailing") { |element| 
+          #@response << element.elements["Created"].get_text.to_s + ", Name " + element.elements["Name"].get_text.to_s + ", MailingId: " + element.elements["Id"].get_text.to_s
+        #}
+      when "Mailing"
+          text = doc.elements["MailingReport/Message/ContentHtml"].get_text.to_s
+          @html = REXML::Text::unnormalize(text)
+          render :inline => @html
     end
    
    
@@ -87,10 +125,10 @@ class AdsController < ApplicationController
     
  
   
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml { render xml: @response }
-    end
+    #respond_to do |format|
+      #format.html 
+      #format.xml { render xml: @response }
+    #end
   end
   
   def supplier_dash
