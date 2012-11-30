@@ -1,4 +1,6 @@
 Backend::Application.routes.draw do
+  resources :reachmailgroups
+
   resources :ads
   
   resources :clients

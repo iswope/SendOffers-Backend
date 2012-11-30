@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121128212237) do
+ActiveRecord::Schema.define(:version => 20121130171111) do
 
   create_table "ads", :force => true do |t|
     t.integer  "client_id"
@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(:version => 20121128212237) do
     t.string   "imagemap"
     t.string   "admin_notes"
     t.string   "uuid"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "content"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.string   "content",     :limit => 4000
   end
 
   create_table "clients", :force => true do |t|
@@ -66,6 +66,12 @@ ActiveRecord::Schema.define(:version => 20121128212237) do
     t.string   "uuid"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "reachmailgroups", :force => true do |t|
+    t.integer "client_id"
+    t.string  "name"
+    t.string  "groupid"
   end
 
   create_table "users", :force => true do |t|
