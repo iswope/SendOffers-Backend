@@ -42,9 +42,14 @@ class AdsController < ApplicationController
         method = "get"
         service_url= '/Rest/Content/Mailings/v1/' + accountid
       when "Mailing"
+        method = "post"
+        service_url= '/Rest/Reports/v1/mailings/query/' + accountid
+        filter = "<MailingReportFilter><MailingId>" + params[:mailing] + "</MailingId></MailingReportFilter>"
+=begin        
         method = "get"
         #service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
         service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + params[:mailing]
+=end        
       when "Stats"
         method = "get"
         service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
@@ -74,7 +79,7 @@ class AdsController < ApplicationController
 
    doc = REXML::Document.new(resp.body)
 
-   #@raw = resp.body
+   @raw = resp.body
    @response = Array.new
    
    case @report
@@ -100,8 +105,10 @@ class AdsController < ApplicationController
         #}
       when "Mailing"
           #text = doc.elements["MailingReport/Message/ContentHtml"].get_text.to_s
-          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => params[:mailing]) + "'>" + params[:mailing] + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
-          @html = REXML::Text::unnormalize(text)
+          
+          #text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => params[:mailing]) + "'>" + params[:mailing] + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
+          #@html = REXML::Text::unnormalize(text)
+          
           #render :inline => @html
       when "Stats"
         doc.elements.each("MailingReport/Lists/MailingListReport") { |element|           
