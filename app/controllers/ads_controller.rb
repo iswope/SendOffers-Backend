@@ -33,7 +33,7 @@ class AdsController < ApplicationController
       when "Mailings"
         method = "post"
         service_url= '/Rest/Reports/v1/mailings/query/' + accountid
-        filter = "<MailingReportFilter><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-25T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-28T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+        filter = "<MailingReportFilter><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-26T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-12-03T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
       when "byGroup"
         method = "post"
         service_url= '/Rest/Content/Mailings/v1/query/' + accountid
@@ -42,14 +42,16 @@ class AdsController < ApplicationController
         method = "get"
         service_url= '/Rest/Content/Mailings/v1/' + accountid
       when "Mailing"
+=begin        
         method = "post"
         service_url= '/Rest/Reports/v1/mailings/query/' + accountid
         filter = "<MailingReportFilter><MailingId>" + params[:mailing] + "</MailingId></MailingReportFilter>"
-=begin        
+=end        
+
         method = "get"
         #service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
         service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + params[:mailing]
-=end        
+
       when "Stats"
         method = "get"
         service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
@@ -106,8 +108,8 @@ class AdsController < ApplicationController
       when "Mailing"
           #text = doc.elements["MailingReport/Message/ContentHtml"].get_text.to_s
           
-          #text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => params[:mailing]) + "'>" + params[:mailing] + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
-          #@html = REXML::Text::unnormalize(text)
+          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => params[:mailing]) + "'>" + params[:mailing] + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
+          @html = REXML::Text::unnormalize(text)
           
           #render :inline => @html
       when "Stats"
