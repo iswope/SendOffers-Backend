@@ -106,9 +106,9 @@ class AdsController < ApplicationController
           #@response << element.elements["Created"].get_text.to_s + ", Name " + element.elements["Name"].get_text.to_s + ", MailingId: " + element.elements["Id"].get_text.to_s
         #}
       when "Mailing"
-          #text = doc.elements["MailingReport/Message/ContentHtml"].get_text.to_s
+          #text = doc.elements["MailingReport/Message/ContentHtml"].get_text.to_s 
           
-          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => params[:mailing]) + "'>" + params[:mailing] + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
+          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => doc.elements["Mailing/AddressId"].get_text.to_s) + "'>" + doc.elements["Mailing/AddressId"].get_text.to_s + "</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
           @html = REXML::Text::unnormalize(text)
           
           #render :inline => @html
