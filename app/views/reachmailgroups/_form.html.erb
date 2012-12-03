@@ -1,0 +1,33 @@
+<%= form_for(@reachmailgroup) do |f| %>
+  <% if @reachmailgroup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@reachmailgroup.errors.count, "error") %> prohibited this reachmailgroup from being saved:</h2>
+
+      <ul>
+      <% @reachmailgroup.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :client_id %><br />
+    <%= f.number_field :client_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :groupid %><br />
+    <%= f.text_field :groupid %>
+  </div>
+  <div class="field">
+    <%= f.label :isdeleted %><br />
+    <%= f.text_field :isdeleted %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Client:</b>
+  <%= @reachmailgroup.client_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @reachmailgroup.name %>
+</p>
+
+<p>
+  <b>Groupid:</b>
+  <%= @reachmailgroup.groupid %>
+</p>
+
+<p>
+  <b>Isdeleted:</b>
+  <%= @reachmailgroup.isdeleted %>
+</p>
+
+
+<%= link_to 'Edit', edit_reachmailgroup_path(@reachmailgroup) %> |
+<%= link_to 'Back', reachmailgroups_path %>

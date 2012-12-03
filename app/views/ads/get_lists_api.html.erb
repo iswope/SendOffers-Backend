@@ -1,0 +1,17 @@
+<h1>Mailing Lists</h1>
+<h2><%=h @report %></h2>
+
+<% unless @response.nil?
+		@response.each do |list| %>
+			<%=h list.html_safe %><br />
+<% 		end
+	end %>
+<% unless @html.nil? %>
+	<%=raw @html %>
+<% end %>	
+<br />
+[
+<% unless @raw.nil? %>
+	<%=raw @raw %>
+<% end %>	
+]
