@@ -12,7 +12,7 @@
 //	});
 /*
 jQuery(function($) {
-// when the #region_id field changes
+// when the #region_id field changes 
   $("#role").change(function() {
     jQuery.post('/role_options?opts=' + this.value, 
     success : function(data){
@@ -40,7 +40,7 @@ Registration is free!
 	<legend><h2>Select Role</h2></legend>
 	  <p>
         <label for="role" >Role:</label>
-			<%= select_tag :role, options_for_select(["Select","Supplier", "Distributor"]) %>
+			<%= select_tag :role, options_for_select({"Select", "Supplier", "Distributor"}) %>
       </p>
 </fieldset>
 <br />

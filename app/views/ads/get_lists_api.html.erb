@@ -10,8 +10,29 @@
 	<%=raw @html %>
 <% end %>	
 <br />
-[
-<% unless @raw.nil? %>
-	<%=raw @raw %>
+<% unless @group.nil? %>
+	GroupId: <%=raw @group %>
 <% end %>	
+<br />
+<% unless @created.nil? %>
+	Created: <%=raw @created %>
+<% end %>	
+<br />
+<% unless @mailing.nil? %>
+	Mailing: <%=raw @mailing %>
+<% end %>	
+<br />
+<% unless @name.nil? %>
+	Name: <%=raw @name %>
+<% end %>	
+<br />
+<% unless @subject.nil? %>
+	Subject: <%=raw @subject %>
+<% end %>	
+<br />
+<br />
+[
+<%# unless @raw.nil? %> 
+	<%#=raw @raw %>
+<%# end %>	
 ]

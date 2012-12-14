@@ -8,6 +8,11 @@ class AdsController < ApplicationController
   def get_lists_api
     @uuid = params[:id]
     @report = params[:report]
+    @created = params[:created]
+    @mailing = params[:mailing]
+    @group = params[:group]
+    @name = params[:name]
+    @subject = params[:subject]
     #@client = Client.find(:first, :conditions => ['uuid = ?', @uuid])
     
       
@@ -31,13 +36,18 @@ class AdsController < ApplicationController
         service_url= '/Rest/Contacts/v1/lists/query/' + accountid
         filter = '<ListFilter></ListFilter>'
       when "Mailings"
+        a = @created.split("T")
+        create_date =  a[0].to_s
         method = "post"
-        service_url= '/Rest/Reports/v1/mailings/query/' + accountid
-        filter = "<MailingReportFilter><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-26T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-12-03T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+        service_url= '/Rest/Reports/v1/mailings/query/' + accountid 
+        #filter = "<MailingReportFilter><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-26T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-12-03T12:00:47</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+        #filter = "<MailingReportFilter><MaxResults>30</MaxResults><ScheduledDeliveryOnOrAfter>" + @created + "</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>" + @created + "</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
+        filter = "<MailingReportFilter><MaxResults>30</MaxResults><ScheduledDeliveryOnOrAfter>" + create_date + "T00:00:00" + "</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>" + create_date + "T23:59:59" + "</ScheduledDeliveryOnOrBefore></MailingReportFilter>"
       when "byGroup"
         method = "post"
         service_url= '/Rest/Content/Mailings/v1/query/' + accountid
-        filter = "<MailingFilter><GroupId>" + params[:group] + "</GroupId><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-25T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-28T12:00:47</ScheduledDeliveryOnOrBefore></MailingFilter>"
+        #filter = "<MailingFilter><GroupId>" + @group + "</GroupId><MaxResults>20</MaxResults><ScheduledDeliveryOnOrAfter>2012-11-25T12:00:47</ScheduledDeliveryOnOrAfter><ScheduledDeliveryOnOrBefore>2012-11-28T12:00:47</ScheduledDeliveryOnOrBefore></MailingFilter>"
+        filter = "<MailingFilter><GroupId>" + @group + "</GroupId></MailingFilter>"
       when "Content"
         method = "get"
         service_url= '/Rest/Content/Mailings/v1/' + accountid
@@ -45,17 +55,17 @@ class AdsController < ApplicationController
 =begin        
         method = "post"
         service_url= '/Rest/Reports/v1/mailings/query/' + accountid
-        filter = "<MailingReportFilter><MailingId>" + params[:mailing] + "</MailingId></MailingReportFilter>"
+        filter = "<MailingReportFilter><MailingId>" + @mailing + "</MailingId></MailingReportFilter>"
 =end        
 
         method = "get"
-        #service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
-        service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + params[:mailing]
+        service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + @mailing
+        #service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + @mailing
 
       when "Stats"
         method = "get"
-        service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + params[:mailing]
-        #service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + params[:mailing]        
+        service_url= '/Rest/Reports/v1/mailings/' + accountid + "/" + @mailing
+        #service_url= '/Rest/Content/Mailings/v1/' + accountid + "/" + @mailing
       else
         @report = "Groups"
         method = "get"
@@ -94,12 +104,16 @@ class AdsController < ApplicationController
           @response << element.elements["CreateDate"].get_text.to_s + ", GroupId: " + element.elements["GroupId"].get_text.to_s + ", Id: " + element.elements["Id"].get_text.to_s + "," + element.elements["Name"].get_text.to_s
         }
       when "Mailings"
-        doc.elements.each("MailingReports/MailingReport") { |element|           
-          @response << element.elements["Created"].get_text.to_s + ", MailingListId: " + element.elements["Lists/MailingListReport/MailingListId"].get_text.to_s + ", MailingId: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => element.elements["MailingId"].get_text.to_s) + "'>" + element.elements["MailingId"].get_text.to_s + "</a>, " + element.elements["Lists/MailingListReport/ListName"].get_text.to_s + ", " + element.elements["Lists/MailingListReport/RecipientCount/Sent"].get_text.to_s + "<br />"
+        doc.elements.each("MailingReports/MailingReport") { |element|
+          if element.elements["Message/Name"].get_text.to_s == @name and element.elements["Message/Subject"].get_text.to_s == @subject
+            @response << "Created: " + element.elements["Created"].get_text.to_s + "<br />MailingId: " + element.elements["MailingId"].get_text.to_s + "<br />Name : " + element.elements["Message/Name"].get_text.to_s + "<br />Subject: " + element.elements["Message/Subject"].get_text.to_s + "<br />"
+            @response << "Sent: " + element.elements["Lists/MailingListReport/RecipientCount/Sent"].get_text.to_s + "<br />"
+          end
         }
       when "byGroup"
-        doc.elements.each("Mailings/Mailing") { |element|           
-          @response << element.elements["Created"].get_text.to_s + ", Id: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>, " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
+        doc.elements.each("Mailings/Mailing") { |element|    
+          #@response << element.elements["Created"].get_text.to_s + ", Id: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>, " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
+          @response << "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailings', :mailing => element.elements["Id"].get_text.to_s, :name => element.elements["Name"].get_text.to_s, :created => element.elements["Created"].get_text.to_s, :subject => element.elements["Subject"].get_text.to_s) + "'>" + element.elements["Created"].get_text.to_s + "</a>" + ", Id: " + element.elements["Id"].get_text.to_s + ", " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
         }
       when "Content"
         #doc.elements.each("Mailings/Mailing") { |element| 

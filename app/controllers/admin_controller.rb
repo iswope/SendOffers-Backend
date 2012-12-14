@@ -113,11 +113,11 @@ class AdminController < ApplicationController
   def role_options
     @opts = params[:opts]
     if @opts == "Supplier"
-      #render :partial => 'supplier_reg', :layout => false, :locals =>{:client =>@client}
+      #render :partial => 'supplier_reg', :layout => false, :locals => {:client => @client}
       #render :partial => "supplier_reg", :object => @client
-      render :partial => "supplier_reg", :layout => false, :status => :created
+      render :partial => 'supplier_reg', :layout => false, :status => :created
     elsif @opts == "Distributor"
-      render :partial => 'distributor_reg', :layout => false, :locals =>{:client =>@client}
+      render :partial => 'distributor_reg', :layout => false, :locals => {:client => @client}
       #render :partial => "distributor_reg", :object => @client
     end
   end
