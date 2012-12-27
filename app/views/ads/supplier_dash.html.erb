@@ -1,35 +1,52 @@
 <h1>Supplier Dashboard</h1>
 <%= flash[:notice] %>
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Subject</th>
-    <th>Dist Art</th>
-    <th>EndUserArt</th>
-    <th>Start</th>
-    <th>Status</th>
-    <th>Created</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @ads.each do |ad| %>
-  <tr>
-    <td><%= ad.id %></td>
-    <td><%= ad.subject %></td>
-    <td><%= image_tag ad.dist_art.to_s.insert(5, 'thumb_') %></td>
-    <td><%= image_tag ad.supp_art.to_s.insert(5, 'thumb_') %></td>    
-    <td><%= ad.start %></td>
-    <td><%= ad.status %></td>
-    <td><%= ad.created_at %></td>
-    <td><%= link_to 'Show', ad %></td>
-    <td><%= link_to 'Edit', edit_ad_path(ad) %></td>
-    <td><%= link_to 'Destroy', ad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+<% if @ads.nil? %>
+	<table>
+	  <tr>
+	    <th>ID</th>
+	    <th>Subject</th>
+	    <th>Dist Art</th>
+	    <th>EndUserArt</th>
+	    <th>Start</th>
+	    <th>Status</th>
+	    <th>Created</th>
+	    <th></th>
+	    <th></th>
+	    <th></th>
+	  </tr>
+	
+	<% @ads.each do |ad| %>
+	  <tr>
+	    <td><%= ad.id %></td>
+	    <td><%= ad.subject %></td>
+	    <td><%= image_tag ad.dist_art.to_s.insert(5, 'thumb_') %></td>
+	    <td><%= image_tag ad.supp_art.to_s.insert(5, 'thumb_') %></td>    
+	    <td><%= ad.start %></td>
+	    <td><%= ad.status %></td>
+	    <td><%= ad.created_at %></td>
+	    <td><%= link_to 'Show', ad %></td>
+	    <td><%= link_to 'Edit', edit_ad_path(ad) %></td>
+	    <td><%= link_to 'Destroy', ad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	  </tr>
+	<% end %>
+	</table>
 <% end %>
-</table>
-
 <br />
 
 <%= link_to 'New Ad', { :action => "supplier_ad" } %>
+
+<br /><br />
+<h3>Scheduled/Sent</h3>
+<br />
+
+<% unless @response.nil?
+	@response.reverse_each do |list| %>
+		<%=h list.html_safe %><br />
+<% 	end
+   end %>
+   
+<br /><br />  
+
+<% unless @html.nil? %>
+	<%=raw @html %>
+<% end %>	

@@ -2,10 +2,10 @@
 <h2><%=h @report %></h2>
 
 <% unless @response.nil?
-		@response.each do |list| %>
-			<%=h list.html_safe %><br />
-<% 		end
-	end %>
+	@response.each do |list| %>
+		<%=h list.html_safe %><br />
+<% 	end
+   end %>
 <% unless @html.nil? %>
 	<%=raw @html %>
 <% end %>	
@@ -20,6 +20,14 @@
 <br />
 <% unless @mailing.nil? %>
 	Mailing: <%=raw @mailing %>
+<% end %>	
+<br />
+<% unless @aid.nil? %>
+	Ad Id: <%=raw @aid %>
+<% end %>	
+<br />
+<% unless @addressid.nil? %>
+	Address Id: <%=raw @addressid %>
 <% end %>	
 <br />
 <% unless @name.nil? %>
