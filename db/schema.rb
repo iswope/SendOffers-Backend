@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121221181108) do
+ActiveRecord::Schema.define(:version => 20130109173740) do
 
   create_table "ads", :force => true do |t|
     t.integer  "client_id"
@@ -64,9 +64,18 @@ ActiveRecord::Schema.define(:version => 20121221181108) do
     t.string   "leademail"
     t.string   "status"
     t.string   "uuid"
+    t.string   "reachmailgroup_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "reachmailgroup_id"
+    t.string   "acct_name"
+    t.string   "asi"
+    t.string   "ppai"
+    t.string   "sage"
+    t.string   "upic"
+    t.string   "facebook"
+    t.string   "twitter"
+    t.string   "catalog"
+    t.string   "unsub"
   end
 
   create_table "reachmailgroups", :force => true do |t|

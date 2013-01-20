@@ -13,3 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+//require cufon.js
+//require jquery.min.js
+//require Museo_400-Museo_italic_400.font.js
+//require swfobject.js
+//require jquery.hoverInt.js
+//require jquery.roundabout.js
+//require jquery.roundabout-shapes-1.1.js
+//require jquery.bgiframe.js

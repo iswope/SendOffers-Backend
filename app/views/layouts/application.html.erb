@@ -5,10 +5,130 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  
+    <!-- for IE6 i'm sorry but there is too much wrong with it, needs warning at least, you can disable it by delething this load. -->
+    <script type="text/javascript">
+      /* pretty photo responds on rel='prettyPhoto' */
+      jQuery(document).ready(function() { $("a[rel^='prettyPhoto']").prettyPhoto();   });
+    </script>
+    
+        <!-- this is needed for the cycle slideshow -->
+    <script type="text/javascript">
+      $(function() {
+        $('#slideshow').cycle({
+          fx:     'fade',  // effect
+          speed:  400,    // speed of transition
+          timeout: 8000,    // timeout of the slide
+          pause:       false,     // true to enable "pause on hover"
+          pauseOnPagerHover: false, // true to pause when hovering over pager link
+          pager:  '#slideshownav',
+          next:   '#slideshownext',
+          prev:   '#slideshowprev',
+          pagerAnchorBuilder: function(idx, slide) {
+            // return sel string for existing anchor
+            return '#slideshownav li:eq(' + (idx) + ') a';
+          },
+          after:update_slide_caption,
+          before:fade_slide_caption,
+          cleartypeNoBg: true,  // fix cleartype inside slides
+          cleartype: true  // fix cleartype inside slides
+        });
+        $('#slideshownav li a').click(function() {   $('#slideshow').cycle('pause');   $('#button_pause').fadeOut(300); $('#button_play').fadeIn(200);   });
+        $('.slide').click(function() {   $('#slideshow').cycle('pause'); 	$('#button_pause').fadeOut(300); $('#button_play').fadeIn(200);    });
+        // $('.slide').mouseenter(function() {   $('#slideshow').cycle('pause'); 	$('#button_pause').fadeOut(200); $('#button_play').fadeIn(200);    });
+        // $('.slide').mouseleave(function() {   $('#slideshow').cycle('resume'); $('#button_pause').fadeIn(200); $('#button_play').fadeOut(200);  });
+        $('#roundabout li a').click(function() { $('#slideshow').cycle('pause'); $('#button_pause').fadeOut(300); $('#button_play').fadeIn(200);  });
+        $('#pauseButton').click(function() {  $('#slideshow').cycle('pause'); $('#button_pause').fadeOut(300); $('#button_play').fadeIn(200);  });
+        $('#resumeButton').click(function() {  $('#slideshow').cycle('resume'); $('#button_pause').fadeIn(200); $('#button_play').fadeOut(200);  });
+      });
+      fade_slide_caption = function(next, previous) {
+        var caption_container;
+        caption_container = $('#slideshowcaption')
+        caption_container.fadeOut('fast')
+      }
+      update_slide_caption = function(next, previous) {   
+        var caption;
+        caption_container = $('#slideshowcaption')
+        caption = $('span.slidecaption', previous)
+        caption_container.fadeIn('fast')
+        caption_container.html(caption.html())
+      }
+    </script>
+    
 </head>
 <body>
+	
+    <!-- start top and main menu -->
+    <div class="main-menu">
+      <div class="ornament">
+        <div class="containit">
+          <div class="logo"><a href="http://www.sendoffers.com/index.php"><img src="http://www.sendoffers.com/includes/images/logo.png" alt="Send Offers" /></a></div>
+          <div class="menu">
+          
+            <!-- navigation start -->
+            <div id="navigation">
+              <ul class="sf-menu">
+                <li><a href="http://www.sendoffers.com/about.php" class="applyfont">About</a>
+                <ul>
+                    <li><a href="http://www.sendoffers.com/testimonials.php">Supplier Testimonials</a></li>
+                </ul>   
+                </li>
+                <li><a href="http://www.sendoffers.com/pricing.php" class="applyfont">Pricing</a></li>
+                <li>
+                  <a href="http://www.sendoffers.com/services-wide.php" class="applyfont">Suppliers</a>
+                  <ul>
+                    <li><a href="http://www.sendoffers.com/email_marketing.php">Email Broadcasts</a></li>
+                    <li><a href="http://www.sendoffers.com/vcatalogs.php">VCatalogs</a></li>
+                    <li><a href="http://www.sendoffers.com/printing_mailing.php">MailPak</a></li>
+                    <li class="last roundbottom"><a href="http://www.sendoffers.com/design.php">Design Services</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="http://www.sendoffers.com/distributor_services.php" class="applyfont">Distributors</a>
+                  <ul>
+                    <li><a href="http://www.sendoffers.com/distributor_services.php">Distributor Offerings</a></li>
+                    <li><a href="http://www.sendoffers.com/clickcatalog.php">ClickCatalog</a></li>
+                    <li class="last roundbottom"><a href="http://www.sendoffers.com/signup.php">Subscribe</a></li>
+                    <!--<li class="last roundbottom"><a href="#">UnSubscribe</a></li>-->
+                  </ul>
+                </li>
+                <!--<li><a href="/blog" class="applyfont">Blog</a></li>-->
+                <li><a href="http://www.sendoffers.com/marketplace" class="applyfont">MarketPlace</a></li>
+                <li class="last"><a href="http://www.sendoffers.com/contact.php" class="applyfont">Contact</a></li>
+              </ul>
+            </div>
+            <!-- navigation end -->
+          
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>	
 
+  <script type="text/javascript">
+    jQuery(document).ready(function($) {
+      $('a[rel*=facebox]').facebox({
+        loadingImage : 'src/loading.gif',
+        closeImage   : 'src/closelabel.png'
+      })
+    })
+  </script>
+  
+  	<!-- start header inner -->
+    <div class="header-inner">
+      <div class="background bg1 clearfix">
+        <div class="containit">
+          <h1 style="color: #333;">Campaign Manager</h1>
+          <div class="subtitle"><h3><a href="http://www.sendoffers.com/mediakit" target="_blank"><img src="http://www.sendoffers.com/includes/images/mediakit2.png" alt="Download our Media Kit" border="0" /></a><a href="#"></a></h3>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-shadow"><!--  --></div>
+    </div>
+    <!-- end header inner -->
+    
+<div class="content-wrapper">
 <%= yield %>
-
+<div>
 </body>
 </html>

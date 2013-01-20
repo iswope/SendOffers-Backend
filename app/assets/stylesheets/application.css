@@ -11,3 +11,8 @@
  *= require_self
  *= require_tree .
  */
+require jquery.cycle.css
+require prettyPhoto.css
+require jquery.roundabout.css
+require style.css
+require style-enhance.css
