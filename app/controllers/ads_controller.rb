@@ -3,9 +3,11 @@ require 'net/https'
 require 'rexml/document'
 
 class AdsController < ApplicationController
+  
+  before_filter :authenticate
     
   def get_lists_api
-    @uuid = params[:id]
+    @uuid = params[:uuid]
     @report = params[:report]
     @created = params[:created]
     @mailing = params[:mailing]
@@ -98,7 +100,7 @@ class AdsController < ApplicationController
    case @report
       when "Groups"
         doc.elements.each("Groups/Group") { |element| 
-          @response << "GroupId: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'byGroup', :group => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>," + element.elements["Name"].get_text.to_s
+          @response << "GroupId: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => 1, :uuid => @uuid, :report => 'byGroup', :group => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>," + element.elements["Name"].get_text.to_s
         }
       when "Contacts"
         doc.elements.each("Lists/List") { |element| 
@@ -114,7 +116,7 @@ class AdsController < ApplicationController
       when "byGroup"
         doc.elements.each("Mailings/Mailing") { |element|    
           #@response << element.elements["Created"].get_text.to_s + ", Id: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>, " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
-          @response << "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailings', :mailing => element.elements["Id"].get_text.to_s, :name => element.elements["Name"].get_text.to_s, :created => element.elements["Created"].get_text.to_s, :subject => element.elements["Subject"].get_text.to_s) + "'>" + element.elements["Created"].get_text.to_s + "</a>" + ", Id: " + element.elements["Id"].get_text.to_s + ", " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
+          @response << "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => 1, :uuid => @uuid, :report => 'Mailings', :mailing => element.elements["Id"].get_text.to_s, :name => element.elements["Name"].get_text.to_s, :created => element.elements["Created"].get_text.to_s, :subject => element.elements["Subject"].get_text.to_s) + "'>" + element.elements["Created"].get_text.to_s + "</a>" + ", Id: " + element.elements["Id"].get_text.to_s + ", " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
         }
       when "Content"
         #doc.elements.each("Mailings/Mailing") { |element| 
@@ -126,7 +128,7 @@ class AdsController < ApplicationController
           @aid = doc.elements["Mailing/Id"].get_text.to_s
           @addressid = doc.elements["Mailing/AddressId"].get_text.to_s
           
-          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Stats', :mailing => doc.elements["Mailing/Id"].get_text.to_s) + "'>{" + doc.elements["Mailing/Id"].get_text.to_s + "}</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
+          text = "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => 1, :uuid => @uuid, :report => 'Stats', :mailing => doc.elements["Mailing/Id"].get_text.to_s) + "'>{" + doc.elements["Mailing/Id"].get_text.to_s + "}</a><br />" + doc.elements["Mailing/HtmlContent"].get_text.to_s
           @html = REXML::Text::unnormalize(text)
           
           #render :inline => @html
@@ -163,12 +165,48 @@ class AdsController < ApplicationController
     end
   end
   
+  def admin_dash
+    #@uuid = params[:uuid]
+    #@client = Client.find(:first, :conditions => ['uuid = ?', params[:uuid]])
+    unless @client.role == 'Admin'
+      flash[:notice] = "Admin Only!"
+      redirect_to 'login'
+    end
+    @clients = Client.order('company ASC')
+    @report = "Groups"
+    method = "get"
+    accountid = '6a41fce9-8dbd-4464-a07b-7c87ed0001c6'
+    service_url= '/Rest/Content/Mailings/v1/groups/' + accountid
+    resp = getReports(method, service_url,'')
+    doc = REXML::Document.new(resp.body)
+    @raw = resp.body
+    
+    
+    @response = Array.new
+    doc.elements.each("Groups/Group") { |element| 
+      @response << "<a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => 1, :uuid => @uuid, :report => 'byGroup', :group => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Name"].get_text.to_s + "</a>"
+    }
+    #@supplier_dirs = Dir.glob("../../suppliers/*")
+    @dirs = Array.new
+    Dir.foreach("../suppliers") do |fname|
+      @checkAcct = Client.find(:first, :conditions => ['acct_name = ?', fname])
+      unless File.file?(fname) or fname == "." or fname == ".."
+        if @checkAcct.nil?
+          @dirs << fname + "&nbsp;*"
+        else
+          @dirs << fname
+        end
+      end
+      @dirs = @dirs.sort
+    end
+  end
+  
   def supplier_dash
     @ads = nil
     accountid = '6a41fce9-8dbd-4464-a07b-7c87ed0001c6'
-    @uuid = params[:id]
+    @uuid = params[:uuid]
     @report = params[:report]
-    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:uuid]]) 
     @ads = Ad.find(:all, :conditions => ['client_id = ?', @client.id])
     @response = Array.new
     case @report
@@ -191,7 +229,6 @@ class AdsController < ApplicationController
             @html = REXML::Text::unnormalize(text)
           end
         }
-        
       else
         method = "post"
         service_url= '/Rest/Content/Mailings/v1/query/' + accountid
@@ -202,7 +239,7 @@ class AdsController < ApplicationController
           #@response << element.elements["Created"].get_text.to_s + ", Id: <a href='" + url_for(:controller => 'ads', :action => 'get_lists_api', :id => @uuid, :report => 'Mailing', :mailing => element.elements["Id"].get_text.to_s) + "'>" + element.elements["Id"].get_text.to_s + "</a>, " + element.elements["Name"].get_text.to_s + ", " + element.elements["Subject"].get_text.to_s + "<br />"
           a = element.elements["Created"].get_text.to_s.split("T")
           create_date =  a[0].to_s
-          @response << create_date + " " + "<a href='" + url_for(:controller => 'ads', :action => 'supplier_dash', :id => @uuid, :report => 'Mailings', :mailing => element.elements["Id"].get_text.to_s, :name => element.elements["Name"].get_text.to_s, :created => element.elements["Created"].get_text.to_s, :subject => element.elements["Subject"].get_text.to_s) + "'>" + element.elements["Name"].get_text.to_s + "</a>" + "<br />"
+          @response << create_date + " " + "<a href='" + url_for(:controller => 'ads', :action => 'supplier_dash', :id => 1, :uuid => @uuid, :report => 'Mailings', :mailing => element.elements["Id"].get_text.to_s, :name => element.elements["Name"].get_text.to_s, :created => element.elements["Created"].get_text.to_s, :subject => element.elements["Subject"].get_text.to_s) + "'>" + element.elements["Name"].get_text.to_s + "</a>" + "<br />"
         }
     end
 
@@ -212,8 +249,10 @@ class AdsController < ApplicationController
     end
   end
   
+  def 
+  
   def supplier_ad
-    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:uuid]])
     @ad = Ad.new
     respond_to do |format|
       format.html # new.html.erb
@@ -222,7 +261,7 @@ class AdsController < ApplicationController
   end
   
   def supplier_create
-    @client = Client.find(:first, :conditions => ['uuid = ?', params[:id]])
+    @client = Client.find(:first, :conditions => ['uuid = ?', params[:uuid]])
     @ad = Ad.new(params[:ad])
     @ad.client_id = @client.id
     @ad.uuid = UUIDTools::UUID.timestamp_create.to_s
@@ -304,7 +343,7 @@ class AdsController < ApplicationController
 
     respond_to do |format|
 
-      format.html { redirect_to :action => :supplier_dash, :id => @client.uuid }
+      format.html { redirect_to :action => :supplier_dash, :id => 1, :uuid => @client.uuid }
       format.json { render json: @ad, status: :created, location: @ad }
     end
   end
@@ -395,8 +434,23 @@ class AdsController < ApplicationController
     @ad.destroy
 
     respond_to do |format|
-      format.html { redirect_to ads_url }
+      format.html { render :action => :admin_dash, :id => 1, :uuid => @uuid }
       format.json { head :no_content }
     end
   end
+  
+  protected
+  def authenticate
+    @uuid = params[:uuid]
+    @client = Client.find(:first, :conditions => ['uuid = ?', @uuid])
+    unless @client.nil?
+      @role = @client.role
+    else
+      session['referer'] = request.env["HTTP_REFERER"]
+      flash[:notice] = "Access Credentials issue, please login again.."
+      redirect_to 'login'
+    end
+  end
 end
+
+

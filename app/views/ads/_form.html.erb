@@ -10,6 +10,8 @@
       </ul>
     </div>
   <% end %>
+  
+  <%= hidden_field_tag post[:uuid], @uuid  %>
 
   <div class="field">
     <%= f.label :client_id %><br />

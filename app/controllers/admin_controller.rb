@@ -24,7 +24,7 @@ class AdminController < ApplicationController
             when 'Unknown'
               redirect_to :action => :reset_role, :id => user.id
             when 'Admin'
-                redirect_to '/dash'
+                redirect_to :controller => :ads, :action => :admin_dash, :id => 1, :uuid => @client.uuid
             else
               sendto(role,@client.uuid)
           end
@@ -53,6 +53,13 @@ class AdminController < ApplicationController
     @newclient = Client.new
   end
   
+  def setuser
+    #@clients = Client.all
+    #@clients.each do |client|
+      
+    #end
+    
+  end
   
   def savereg
     @client = Client.new(params[:client])
@@ -142,7 +149,7 @@ class AdminController < ApplicationController
   def sendto(role,client_uuid)
     case role
         when 'Distributor'
-          unless Client.find_by_id(client_id).status == 'Active'
+          unless Client.find_by_uuid(client_uuid).status == 'Active'
             redirect_to ('http://www.sendoffers.com/thankyou.html')
           else
             redirect_to ('http://www.sendoffers.com/marketplace/')
@@ -150,7 +157,7 @@ class AdminController < ApplicationController
         when 'Supplier'
           #@has_ad = Ad.find(:first, :conditions => ['client_id = ?', client_id])
           #unless @has_ad.nil?
-            redirect_to :controller => :ads, :action => :supplier_dash, :id => client_uuid
+            redirect_to :controller => :ads, :action => :supplier_dash, :id => 1, :uuid => client_uuid
           #else
             #@has_prod = Product.find(:first, :conditions => ['client_id = ?', client_id])
             #unless @has_prod.nil?

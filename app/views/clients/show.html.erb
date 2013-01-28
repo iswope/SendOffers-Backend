@@ -1,5 +1,12 @@
 <p id="notice"><%= notice %></p>
 
+
+
+<p>
+  <b>Account Name:</b>
+  <%= @client.acct_name %>
+</p>
+
 <p>
   <b>Email:</b>
   <%= @client.email %>
@@ -131,5 +138,5 @@
 </p>
 
 
-<%= link_to 'Edit', edit_client_path(@client) %> |
-<%= link_to 'Back', clients_path %>
+<%= link_to 'Edit', :controller => :clients, :action => :edit, :id => @client, :uuid => @uuid %> |
+<%= link_to 'Back', :controller => :ads, :action => :admin_dash, :id => @uuid %>

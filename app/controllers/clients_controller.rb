@@ -1,4 +1,7 @@
 class ClientsController < ApplicationController
+    
+  before_filter :authenticate
+  
   # GET /clients
   # GET /clients.json
   def index
@@ -78,6 +81,24 @@ class ClientsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to clients_url }
       format.json { head :no_content }
+    end
+  end
+  
+  protected
+  def authenticate
+    @uuid = params[:uuid]
+    @client = Client.find(:first, :conditions => ['uuid = ?', @uuid])
+    unless @client.nil?
+      @role = @client.role
+    else
+      session['referer'] = request.env["HTTP_REFERER"]
+      flash[:notice] = "Access Credentials issue, please login again.."
+      redirect_to 'login'
+    end
+    unless @client.role == 'Admin'
+      session['referer'] = request.env["HTTP_REFERER"]
+      flash[:notice] = "Admin Only!"
+      redirect_to 'login'
     end
   end
 end

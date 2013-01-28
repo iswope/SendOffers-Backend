@@ -10,7 +10,13 @@
       </ul>
     </div>
   <% end %>
-
+  
+  <%= hidden_field_tag :uuid, @uuid  %>
+  <div class="field">
+    <%= f.label :acct_name %><br />
+    <%= f.text_field :acct_name %>
+  </div>
+  <div class="clear"></div>
   <div class="field">
     <%= f.label :email %><br />
     <%= f.text_field :email %>
@@ -103,18 +109,17 @@
     <%= f.label :status %><br />
     <%= f.text_field :status %>
   </div>
-  <div class="field">
+  <br />
+  <div class="clear"></div>
+  <div class="field" style="width: 600px;">
     <%= f.label :created_at %><br />
     <%= f.datetime_select :created_at %>
   </div>
-  <div class="field">
+  <div class="field" style="width: 600px;">
     <%= f.label :updated_at %><br />
     <%= f.datetime_select :updated_at %>
   </div>
-  <div class="field">
-    UUID<br />
-    <%= f.text_field  :uuid %>
-  </div>
+  <div class="clear"></div>
   <div class="actions">
     <%= f.submit %>
   </div>

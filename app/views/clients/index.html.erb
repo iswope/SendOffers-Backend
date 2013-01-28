@@ -63,8 +63,8 @@
     <td><%= client.status %></td>
     <td><%= client.created_at %></td>
     <td><%= client.updated_at %></td>
-    <td><%= link_to 'Show', client %></td>
-    <td><%= link_to 'Edit', edit_client_path(client) %></td>
+    <td><%= link_to 'Show', :controller => :clients, :action => :show, :id => client, :uuid => @uuid %></td>
+    <td><%= link_to 'Edit', :controller => :clients, :action => :edit, :id => client, :uuid => @uuid %></td>
     <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
@@ -72,4 +72,5 @@
 
 <br />
 
-<%= link_to 'New Client', new_client_path %>
+<%= link_to 'New Client', :controller => :ads, :action => :new, :uuid => @uuid %> | 
+<%= link_to 'Back', :controller => :ads, :action => :admin_dash, :id => @uuid %>
