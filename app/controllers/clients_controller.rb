@@ -6,7 +6,7 @@ class ClientsController < ApplicationController
   # GET /clients.json
   def index
     @clients = Client.all
-
+    @uuid = params[:uuid]
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @clients }
@@ -17,7 +17,7 @@ class ClientsController < ApplicationController
   # GET /clients/1.json
   def show
     @client = Client.find(params[:id])
-
+    @uuid = params[:uuid]
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @client }
@@ -28,7 +28,7 @@ class ClientsController < ApplicationController
   # GET /clients/new.json
   def new
     @client = Client.new
-
+    @uuid = params[:uuid]
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @client }
@@ -37,6 +37,7 @@ class ClientsController < ApplicationController
 
   # GET /clients/1/edit
   def edit
+    @uuid = params[:uuid]
     @client = Client.find(params[:id])
   end
 
@@ -44,10 +45,10 @@ class ClientsController < ApplicationController
   # POST /clients.json
   def create
     @client = Client.new(params[:client])
-
+    @uuid = params[:uuid]
     respond_to do |format|
       if @client.save
-        format.html { redirect_to @client, notice: 'Client was successfully created.' }
+        format.html { redirect_to :controller => 'ads', :action => 'admin_dash', :id => 1, :uuid => @uuid, notice: 'Client was successfully created.' }
         format.json { render json: @client, status: :created, location: @client }
       else
         format.html { render action: "new" }
@@ -60,10 +61,10 @@ class ClientsController < ApplicationController
   # PUT /clients/1.json
   def update
     @client = Client.find(params[:id])
-
+    @uuid = params[:uuid]
     respond_to do |format|
       if @client.update_attributes(params[:client])
-        format.html { redirect_to @client, notice: 'Client was successfully updated.' }
+        format.html { redirect_to :controller => 'ads', :action => 'admin_dash', :id => 1, :uuid => @uuid, notice: 'Client was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -77,9 +78,9 @@ class ClientsController < ApplicationController
   def destroy
     @client = Client.find(params[:id])
     @client.destroy
-
+    @uuid = params[:uuid]
     respond_to do |format|
-      format.html { redirect_to clients_url }
+      format.html { redirect_to :controller => 'ads', :action => 'admin_dash', :id => 1, :uuid => @uuid }
       format.json { head :no_content }
     end
   end
